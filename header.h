@@ -28,7 +28,7 @@
 #include "driverlib/sysctl.h"
 #include "driverlib/uart.h"
 #include "utils/uartstdio.h"
-
+#include "servo.h"
 
 /* Declarations */
 volatile uint8_t  rx_buffer[BT_RX_BUFFER_SIZE];
