@@ -133,7 +133,7 @@ void Buttons_Init(void)
 //*****************************************************************************
 
 // PWM period in clock ticks: 16 MHz / 16000 = 1 kHz.
-#define RGB_PERIOD 16000
+#define RGB_PERIOD 2000
 
 void RGB_SetChannel(uint32_t output, uint32_t output_bit, uint8_t level)
 {
@@ -164,7 +164,7 @@ void RGB_Set(uint8_t red, uint8_t green, uint8_t blue)
 void RGB_Init(void)
 {
     // PWM clock = system clock (16 MHz).
-    ROM_SysCtlPWMClockSet(SYSCTL_PWMDIV_1);
+    ROM_SysCtlPWMClockSet(SYSCTL_PWMDIV_8);
     ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM1);
     ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
 
