@@ -17,6 +17,7 @@
 // Pressing SW1 or SW2 sends a message to the phone.
 
 #include <header.h>
+#include "auth.h"
 
 // Set up UART1 (PB0/PB1, 8-N-1, no flow control) and its interrupt.
 void BT_Init(void)
@@ -215,12 +216,17 @@ int main(void)
     bool sw1, sw2;
     bool sw1_was = false;
     bool sw2_was = false;
+    char received_pin[7];   //7 characters bc C strings need a /0
+    uint8_t pin_length = 0;
 
     init();
+    Auth_Init(); //inti the auth system
 
-    UARTprintf("\nHC-05 bluetooth test started\n");
+    //UARTprintf("\nHC-05 bluetooth test started\n");
+    UARTprintf("\nBluetooth authentication demo started\n");
     UARTprintf("Pair the phone (PIN 1234), then connect with Serial Bluetooth Terminal.\n");
-    UARTprintf("Send r, g, b or o from the phone to change the LED.\n");
+    UARTprintf("Send a six-digit PIN to test authentication.\n");
+    //UARTprintf("Send r, g, b or o from the phone to change the LED.\n");
 
     while(1)
     {
@@ -241,14 +247,62 @@ int main(void)
                 UARTprintf("RX 0x%02x\n", c);
             }
 
-            switch(c)
+  
+        //Nicks demo code
+         //*********************************************
+
+         
+        if (c >= '0' && c <= '9')
+        {
+            received_pin[pin_length] = (char)c;
+            pin_length++;
+        
+            // Once all six digits arrive, check the PIN.
+            if (pin_length == 6)
             {
-                case 'r': RGB_Set(255, 0, 0); break;
-                case 'g': RGB_Set(0, 255, 0); break;
-                case 'b': RGB_Set(0, 0, 255); break;
-                case 'o': RGB_Set(0, 0, 0);   break;
-                default:                      break;
+                received_pin[6] = '\0';
+        
+                if (Auth_CheckPIN(received_pin))
+                {
+                    RGB_Set(0, 255, 0);  // GREEN: correct PIN
+                    BT_TX_String("\r\nAccess granted\r\n");
+                    UARTprintf("Authentication successful\n");
+                }
+                else
+                {
+                    RGB_Set(255, 0, 0);  // RED: incorrect PIN
+                    BT_TX_String("\r\nAccess denied\r\n");
+                    UARTprintf("Authentication failed\n");
+                }
+        
+                pin_length = 0;
             }
+        }
+        else if (c == '\r' || c == '\n')
+        {
+            // Ignore line endings after a completed PIN.
+            // Discard an incomplete PIN.
+            pin_length = 0;
+        }
+        else
+        {
+            // Discard unexpected characters.
+            pin_length = 0;
+        }
+
+
+
+
+           //Meher old rgb test ***************
+         
+            //switch(c)
+           // {
+            //    case 'r': RGB_Set(255, 0, 0); break;
+               // case 'g': RGB_Set(0, 255, 0); break;
+               // case 'b': RGB_Set(0, 0, 255); break;
+               // case 'o': RGB_Set(0, 0, 0);   break;
+               // default:                      break;
+         //   }
         }
 
         // LaunchPad -> Phone: send a message when SW1 or SW2 changes.
