@@ -39,11 +39,12 @@ Group project for ECE 4721/5721: a smartphone-based keyless entry node built on 
 - UART0 (PA0/PA1) is the debug console at 115200 baud, printed with `UARTprintf()`.
 
 
-**Authentication module (`auth.c`, `auth.h`) 
+**Authentication module (`auth.c`, `auth.h`)**:
 
 - `Auth_Init()` initializes the authentication system and resets the failed-attempt counter.
 - `Auth_CheckPIN()` compares a received PIN against the predefined demonstration PIN and returns whether authentication succeeded.
 - `Auth_GetFailedAttempts()` returns the number of unsuccessful authentication attempts.
+- `test_auth.c` contains unit tests for correct and incorrect PINs, invalid inputs, failed-attempt tracking, and authentication initialization.
 - Correct PINs are accepted, incorrect PINs are rejected, and the failed-attempt counter resets following successful authentication.
 
 ## Hardware
