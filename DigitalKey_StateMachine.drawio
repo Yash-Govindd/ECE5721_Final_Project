@@ -1,0 +1,145 @@
+<mxfile host="app.diagrams.net" pages="2">
+  <diagram id="p1" name="Lock state machine">
+    <mxGraphModel dx="1437" dy="1102" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1420" pageHeight="960" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p1START" parent="1" style="ellipse;html=1;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="20" y="305" as="geometry" />
+        </mxCell>
+        <mxCell id="p1startlbl" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" value="power-on / reset" vertex="1">
+          <mxGeometry height="76" width="110" y="213" as="geometry" />
+        </mxCell>
+        <mxCell id="p1LOCKED" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" value="&lt;b style=&quot;font-size:15px&quot;&gt;LOCKED&lt;/b&gt;&lt;br&gt;LED: &lt;b&gt;RED&lt;/b&gt;&lt;br&gt;Servo: lock position (planned)&lt;br&gt;Waiting for the first digit of the PIN" vertex="1">
+          <mxGeometry height="120" width="230" x="80" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="p1ENTRY" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" value="&lt;b style=&quot;font-size:15px&quot;&gt;PIN ENTRY&lt;/b&gt;&lt;br&gt;Collect digits 0-9 (UART1 RX)&lt;br&gt;Echo each byte to the phone&lt;br&gt;LED: &lt;b&gt;RED&lt;/b&gt;, count n of 6" vertex="1">
+          <mxGeometry height="120" width="230" x="420" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="p1CHECK" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" value="&lt;b style=&quot;font-size:15px&quot;&gt;PIN CHECK&lt;/b&gt;&lt;br&gt;Auth_CheckPIN(6 digits)&lt;br&gt;Compare with the PIN stored in the LaunchPad&lt;br&gt;Match = valid, no match = invalid" vertex="1">
+          <mxGeometry height="120" width="250" x="760" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="p1UNLOCKED" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" value="&lt;b style=&quot;font-size:15px&quot;&gt;UNLOCKED&lt;/b&gt;&lt;br&gt;LED: &lt;b&gt;GREEN&lt;/b&gt;&lt;br&gt;Phone gets &quot;Access granted&quot;&lt;br&gt;5 s window: SW1 / SW2 can open doors" vertex="1">
+          <mxGeometry height="120" width="250" x="1120" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p1FAILED" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" value="&lt;b style=&quot;font-size:15px&quot;&gt;AUTH FAILED&lt;/b&gt;&lt;br&gt;LED: &lt;b&gt;YELLOW&lt;/b&gt;&lt;br&gt;Phone gets &quot;Access denied&quot;&lt;br&gt;Failed-attempt count + 1" vertex="1">
+          <mxGeometry height="120" width="250" x="1120" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="p1LOCKOUT" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;dashed=1;strokeWidth=2;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" value="&lt;b style=&quot;font-size:15px&quot;&gt;LOCKOUT (planned)&lt;/b&gt;&lt;br&gt;LED: &lt;b&gt;YELLOW&lt;/b&gt; blinking&lt;br&gt;All input ignored for 30 s&lt;br&gt;Not in the initial demo" vertex="1">
+          <mxGeometry height="120" width="250" x="760" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="p1e1" edge="1" parent="1" source="p1START" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=1.0000;exitY=0.5000;exitDx=0;exitDy=0;entryX=0.0000;entryY=0.5000;entryDx=0;entryDy=0;" target="p1LOCKED" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1e2" edge="1" parent="1" source="p1LOCKED" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=1.0000;exitY=0.5000;exitDx=0;exitDy=0;entryX=0.0000;entryY=0.5000;entryDx=0;entryDy=0;" target="p1ENTRY" value="digit received&lt;br&gt;(UART1 interrupt)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1e3" edge="1" parent="1" source="p1ENTRY" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=1.0000;exitY=0.5000;exitDx=0;exitDy=0;entryX=0.0000;entryY=0.5000;entryDx=0;entryDy=0;" target="p1CHECK" value="6th digit&lt;br&gt;received">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1e4" edge="1" parent="1" source="p1ENTRY" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=0.5000;exitY=0.0000;exitDx=0;exitDy=0;entryX=0.7391;entryY=0.0000;entryDx=0;entryDy=0;" target="p1LOCKED" value="non-digit or line end:&lt;br&gt;discard partial PIN">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="535" y="200" />
+              <mxPoint x="250" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p1e5" edge="1" parent="1" source="p1CHECK" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=1.0000;exitY=0.2500;exitDx=0;exitDy=0;entryX=0.0000;entryY=0.5000;entryDx=0;entryDy=0;" target="p1UNLOCKED" value="PIN correct&lt;br&gt;LED green, start 5 s">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1075" y="290" />
+              <mxPoint x="1075" y="120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p1e6" edge="1" parent="1" source="p1CHECK" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=1.0000;exitY=0.7500;exitDx=0;exitDy=0;entryX=0.0000;entryY=0.5000;entryDx=0;entryDy=0;" target="p1FAILED" value="PIN wrong&lt;br&gt;LED yellow, start 2 s">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1075" y="350" />
+              <mxPoint x="1075" y="520" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p1e7" edge="1" parent="1" source="p1UNLOCKED" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=0.5000;exitY=0.0000;exitDx=0;exitDy=0;entryX=0.3043;entryY=0.0000;entryDx=0;entryDy=0;" target="p1LOCKED" value="5 s elapsed&lt;br&gt;LED red (servo lock planned)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1245" y="20" />
+              <mxPoint x="150" y="20" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p1e8" edge="1" parent="1" source="p1FAILED" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=0.0000;exitY=0.8500;exitDx=0;exitDy=0;entryX=0.1304;entryY=1.0000;entryDx=0;entryDy=0;" target="p1LOCKED" value="after 2 s (fewer than 3 failures)&lt;br&gt;LED red">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="562" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p1e9" edge="1" parent="1" source="p1FAILED" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;dashed=1;exitX=0.5000;exitY=1.0000;exitDx=0;exitDy=0;entryX=1.0000;entryY=0.5000;entryDx=0;entryDy=0;" target="p1LOCKOUT" value="3 failures in a row&lt;br&gt;(count exists, not yet used)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1245" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p1e10" edge="1" parent="1" source="p1LOCKOUT" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;dashed=1;exitX=0.0000;exitY=0.5000;exitDx=0;exitDy=0;entryX=0.8696;entryY=1.0000;entryDx=0;entryDy=0;" target="p1LOCKED" value="30 s elapsed&lt;br&gt;failure count = 0, LED red">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="280" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p1n0" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="&lt;b style=&quot;font-size:18px&quot;&gt;Digital Key: State Machine&amp;nbsp;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="36" width="900" x="80" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="p1n1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;align=left;spacingLeft=10;verticalAlign=middle;" value="&lt;b&gt;Inputs:&lt;/b&gt; six-digit access PIN from the phone over Bluetooth (UART1, PB0/PB1); SW1 and SW2 act as two doors (page 2). &lt;b&gt;Outputs:&lt;/b&gt; RGB LED (PF1 red, PF2 blue, PF3 green; yellow = red + green), messages back to the phone, UART0 debug console (PuTTY).&lt;br&gt;&lt;b&gt;Validation:&lt;/b&gt; the phone sends the PIN as plain text; the LaunchPad compares it with the PIN stored in its own code (auth.c). No encryption. State timers are loop counters. &lt;b&gt;Planned (dashed):&lt;/b&gt; 3-failure LOCKOUT and servo lock/unlock." vertex="1">
+          <mxGeometry height="100" width="1290" x="80" y="836" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p2" name="Door requests (SW1 / SW2)">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="540" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p2START" value="" style="ellipse;html=1;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="20" y="225" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p2startlbl" value="power-on / reset" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="0" y="185" width="110" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="p2DL" value="&lt;b style=&quot;font-size:15px&quot;&gt;DOOR n LOCKED&lt;/b&gt;&lt;br&gt;LED: &lt;b&gt;RED&lt;/b&gt; (system locked)&lt;br&gt;Servo n: lock position (planned)&lt;br&gt;Door 1 = SW1, Door 2 = SW2" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="180" width="270" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p2DU" value="&lt;b style=&quot;font-size:15px&quot;&gt;DOOR n UNLOCKED&lt;/b&gt;&lt;br&gt;LED: &lt;b&gt;GREEN&lt;/b&gt;&lt;br&gt;Servo n: unlock position (planned)&lt;br&gt;Phone gets &quot;Door n unlocked&quot;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="640" y="180" width="270" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p2e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=1.0000;exitY=0.5000;exitDx=0;exitDy=0;entryX=0.0000;entryY=0.5000;entryDx=0;entryDy=0;" edge="1" parent="1" source="p2START" target="p2DL">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2e2" value="SWn pressed AND system UNLOCKED&lt;br&gt;(valid PIN in the last 5 s)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=1.0000;exitY=0.2500;exitDx=0;exitDy=0;entryX=0.0000;entryY=0.2500;entryDx=0;entryDy=0;" edge="1" parent="1" source="p2DL" target="p2DU">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2e3" value="SWn pressed again (lock request)&lt;br&gt;OR 5 s window ends (locks both doors)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=0.0000;exitY=0.7500;exitDx=0;exitDy=0;entryX=1.0000;entryY=0.7500;entryDx=0;entryDy=0;" edge="1" parent="1" source="p2DU" target="p2DL">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2e4" value="SWn pressed AND system LOCKED&lt;br&gt;phone gets &quot;Door n denied: send PIN first&quot;, LED yellow 2 s" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=0.2963;exitY=0.0000;exitDx=0;exitDy=0;entryX=0.7037;entryY=0.0000;entryDx=0;entryDy=0;" edge="1" parent="1" source="p2DL" target="p2DL">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="180" y="110" />
+              <mxPoint x="290" y="110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p2n0" value="&lt;b style=&quot;font-size:18px&quot;&gt;Door requests: SW1 and SW2 as two doors&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="30" width="900" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="p2n1" value="&lt;b&gt;Idea:&lt;/b&gt; the phone is the key and each button is a door handle. The correct PIN unlocks the system for 5 s; a door only opens if its button is pressed inside that window. Pressing a door button while the system is locked is denied.&lt;br&gt;&lt;br&gt;&lt;b&gt;Same machine for both doors:&lt;/b&gt; SW1 runs it for Door 1 and SW2 for Door 2, each with its own state. Both share the one authentication window, so when it ends both doors lock.&lt;br&gt;&lt;br&gt;&lt;b&gt;Board limit:&lt;/b&gt; there is one RGB LED, so the LED shows the system state and the door number is shown by the messages on the phone and PuTTY. A second servo (PB6 and PB7, same PWM block) would give each door its own lock." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="350" width="810" height="150" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

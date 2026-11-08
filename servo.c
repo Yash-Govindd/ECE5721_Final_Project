@@ -3,6 +3,7 @@
 pwm control for the simulated door lock
 */
 
+#include "header.h"
 #include <stdint.h>
 #include "servo.h"
 #include "inc/hw_memmap.h"

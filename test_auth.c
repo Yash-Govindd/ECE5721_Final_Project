@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdio.h>
 
-int main(void)
+int test_auth(void)
 {
     // Test 1: Correct PIN
     Auth_Init();
