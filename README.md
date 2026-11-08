@@ -1,4 +1,4 @@
-# Phone as a Key: Bluetooth Digital Key using TI Tiva C LaunchPad
+# Keyless Entry system using Bluetooth
 
 Group project for ECE 4721/5721: a smartphone-based keyless entry node built on the
 **TI TM4C123G LaunchPad**. A phone connects over Bluetooth, and sends unlock code via bluetooth to the LaunchPad then drives a servo
@@ -12,7 +12,8 @@ Group project for ECE 4721/5721: a smartphone-based keyless entry node built on 
  Phone (Android)  <--Bluetooth-->  Bluetooth module  <--UART1 (PB0/PB1)-->  TM4C123G LaunchPad
                                                                               |-- UART0 -> USB -> PC console
                                                                               |-- PWM -> servo (lock)
-                                                                              |-- RGB LED, SW1/S
+                                                                              |-- RGB LEDs
+																			  |-- SW1/SW2
 ```
 
 **Planned authentication protocol**
@@ -27,16 +28,14 @@ Group project for ECE 4721/5721: a smartphone-based keyless entry node built on 
 
 ### Current code
 
-**Bluetooth test (`Project_bluetooth_Test.c`)**:
-`bluetooth_uart_example` for a Classic Bluetooth module (HC-05/HC-06 style).
+**Main code (main.c)
 
-- `BT_Init()` sets up UART1 on PB0 (RX) and PB1 (TX) at 9600 8-N-1, with a receive interrupt.
-- The UART1 interrupt (`UART1_Handler`) copies each received byte into a ring buffer;
-  `main()` reads from the buffer with `BT_RX_Available()` / `BT_RX_Read()`.
-- `main()` echoes each byte back to the phone and prints it on the USB debug console.
-  Sending `r`, `g`, `b` or `o` sets the RGB LED red, green, blue, or off.
-- SW1 and SW2 send "pressed" / "released" messages to the phone.
-- UART0 (PA0/PA1) is the debug console at 115200 baud, printed with `UARTprintf()`.
+**Bluetooth test (`Bluetooth.c`)**:
+- `BT_Init()` sets up UART1 on PB0 (RX) and PB1 (TX) at 9600 8-N-1, with a receive interrupt. 
+- The UART1 interrupt (UART1_Handler) copies each received byte into a ring buffer;   `main()` reads from the buffer with `BT_RX_Available()` / `BT_RX_Read()`. 
+- `main ()` echoes each byte back to the phone and prints it on the USB debug console.   Sending passcode string sets the RGB LED red, green, Yellow, to on or off. 
+- SW1 and SW2 send "pressed" / "released" messages to the phone. 
+- UART0 (PA0/PA1) is the debug console at 115200 baud, printed with `UARTprintf()`. 
 
 
 **Authentication module (`auth.c`, `auth.h`)**:
@@ -46,6 +45,9 @@ Group project for ECE 4721/5721: a smartphone-based keyless entry node built on 
 - `Auth_GetFailedAttempts()` returns the number of unsuccessful authentication attempts.
 - `test_auth.c` contains unit tests for correct and incorrect PINs, invalid inputs, failed-attempt tracking, and authentication initialization.
 - Correct PINs are accepted, incorrect PINs are rejected, and the failed-attempt counter resets following successful authentication.
+
+**Servo module (`servo.c`, `servo.h`)**:
+
 
 ## Hardware
 
@@ -63,6 +65,19 @@ Group project for ECE 4721/5721: a smartphone-based keyless entry node built on 
 | RXD | PB1 (U1TX)|
 | GND | GND       |
 | VCC | 5 V (VBUS)|
+
+### LaunchPad
+
+|Peripherals  | LaunchPad pin |
+|SW1      |PF4| 
+|SW2      |PF0| 
+|RED LED  |PF1|
+|BLUE LED |PF2| 
+|GREEN LED|PF3| 
+
+
+
+
 
 ### Files to Include to build and Flash
 >>> C:\ti\TivaWare_C_Series-2.2.0.295\driverlib\rvmdk\driverlib.lib (file type: Library)
