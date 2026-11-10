@@ -89,7 +89,9 @@ int main(void)
     char received_pin[7];   //7 characters bc C strings need a /0
     uint8_t pin_length = 0;
     uint32_t hold_ticks = 0;   // counts down while the LED shows green or yellow
-
+	bool pin_invalid = false;
+	bool pin_started = false;
+	
     init();
     Auth_Init(); //inti the auth system
     RGB_Set(LED_RED);          // LOCKED at start-up
@@ -127,49 +129,52 @@ int main(void)
         //Nicks demo code
          //*********************************************
 
-         
-        if (c >= '0' && c <= '9')
-        {
-            received_pin[pin_length] = (char)c;
-            pin_length++;
-        
-            // Once all six digits arrive, check the PIN.
-            if (pin_length == 6)
-            {
-                received_pin[6] = '\0';
-        
-                if (Auth_CheckPIN(received_pin))
-                {
-                    RGB_Set(LED_GREEN);  // GREEN: correct PIN, unlocked
-                    hold_ticks = UNLOCK_TICKS;
-                    // Servo_Unlock();   // hook for the servo
-                    BT_TX_String("\r\nAccess granted\r\n");
-                    UARTprintf("Authentication successful\n");
-                }
-                else
-                {
-                    RGB_Set(LED_YELLOW); // YELLOW: incorrect PIN
-                    hold_ticks = FAIL_TICKS;
-                    BT_TX_String("\r\nAccess denied\r\n");
-                    UARTprintf("Authentication failed (%u failed attempts)\n",
-                               Auth_GetFailedAttempts());
-                }
-        
-                pin_length = 0;
-            }
-        }
-        else if (c == '\r' || c == '\n')
-        {
-            // Ignore line endings after a completed PIN.
-            // Discard an incomplete PIN.
-            pin_length = 0;
-        }
-        else
-        {
-            // Discard unexpected characters.
-            pin_length = 0;
-        }
 
+		if (c >= '0' && c <= '9')
+		{
+		    pin_started = true;
+		
+		    if (pin_length < 6)
+		    {
+		        received_pin[pin_length++] = (char)c;
+		    }
+		    else
+		    {
+		        pin_invalid = true;
+		    }
+		}
+		else if (c == '\r' || c == '\n')
+		{
+		    if (pin_started)
+		    {
+		        received_pin[pin_length] = '\0';
+		
+		        if (Auth_CheckPIN(
+		            (!pin_invalid && pin_length == 6) ? received_pin : ""))
+		        {
+		            RGB_Set(LED_GREEN);
+		            hold_ticks = UNLOCK_TICKS;
+		            BT_TX_String("\r\nAccess granted\r\n");
+		            UARTprintf("Authentication successful\n");
+		        }
+		        else
+		        {
+		            RGB_Set(LED_YELLOW);
+		            hold_ticks = FAIL_TICKS;
+		            BT_TX_String("\r\nAccess denied\r\n");
+		            UARTprintf("Authentication failed\n");
+		        }
+		
+		        pin_length = 0;
+		        pin_invalid = false;
+		        pin_started = false;
+		    }
+		}
+		else
+		{
+		    pin_started = true;
+		    pin_invalid = true;
+		}
 
 
 
